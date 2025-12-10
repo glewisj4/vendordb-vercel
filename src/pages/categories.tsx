@@ -24,7 +24,7 @@ export default function Categories() {
 
   const deleteCategoryMutation = useMutation({
     mutationFn: async (id: string) => {
-      await apiRequest("DELETE", `/api/categories/${id}`);
+      await apiRequest("DELETE", `/api/categories?id=${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/categories"] });

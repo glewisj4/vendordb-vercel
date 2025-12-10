@@ -28,7 +28,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
       
       const [updated] = await db.update(proCustomers)
-        .set({ ...parsed.data, updatedAt: new Date() })
+        .set({ ...parsed.data, updatedAt: new Date() } as any)
         .where(eq(proCustomers.id, id))
         .returning();
       

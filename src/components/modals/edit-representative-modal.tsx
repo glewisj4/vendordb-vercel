@@ -59,7 +59,7 @@ export default function EditRepresentativeModal({ representative, isOpen, onClos
   const updateRepresentativeMutation = useMutation({
     mutationFn: async (data: InsertRepresentative) => {
       if (!representative) return;
-      const response = await apiRequest("PUT", `/api/representatives/${representative.id}`, data);
+      const response = await apiRequest("PUT", `/api/representatives?id=${representative.id}`, data);
       return response.json();
     },
     onSuccess: () => {

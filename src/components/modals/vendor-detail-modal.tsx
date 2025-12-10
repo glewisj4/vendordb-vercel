@@ -128,7 +128,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose, startInEdit
   // Mutation for deleting sales rep
   const deleteRepMutation = useMutation({
     mutationFn: async (repId: string) => {
-      await apiRequest("DELETE", `/api/representatives/${repId}`);
+      await apiRequest("DELETE", `/api/representatives?id=${repId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/representatives"] });
@@ -200,7 +200,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose, startInEdit
   const updateVendorMutation = useMutation({
     mutationFn: async (data: InsertVendor) => {
       if (!vendor) return;
-      const response = await apiRequest("PUT", `/api/vendors/${vendor.id}`, data);
+      const response = await apiRequest("PUT", `/api/vendors?id=${vendor.id}`, data);
       return response.json();
     },
     onSuccess: () => {
@@ -228,7 +228,7 @@ export default function VendorDetailModal({ vendor, isOpen, onClose, startInEdit
   const deleteVendorMutation = useMutation({
     mutationFn: async () => {
       if (!vendor) return;
-      await apiRequest("DELETE", `/api/vendors/${vendor.id}`);
+      await apiRequest("DELETE", `/api/vendors?id=${vendor.id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/vendors"] });

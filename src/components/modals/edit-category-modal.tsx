@@ -65,7 +65,7 @@ export default function EditCategoryModal({ category, isOpen, onClose }: EditCat
   const updateCategoryMutation = useMutation({
     mutationFn: async (data: InsertCategory) => {
       if (!category) return;
-      const response = await apiRequest("PUT", `/api/categories/${category.id}`, data);
+      const response = await apiRequest("PUT", `/api/categories?id=${category.id}`, data);
       return response.json();
     },
     onSuccess: () => {

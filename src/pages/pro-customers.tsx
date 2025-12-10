@@ -39,7 +39,7 @@ export default function ProCustomers() {
 
   const deleteCustomerMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await apiRequest("DELETE", `/api/pro-customers/${id}`);
+      const response = await apiRequest("DELETE", `/api/pro-customers?id=${id}`);
       return response;
     },
     onSuccess: () => {

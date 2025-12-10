@@ -142,7 +142,7 @@ export default function Vendors() {
 
   const deleteVendorMutation = useMutation({
     mutationFn: async (id: string) => {
-      await apiRequest("DELETE", `/api/vendors/${id}`);
+      await apiRequest("DELETE", `/api/vendors?id=${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/vendors"] });

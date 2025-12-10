@@ -85,7 +85,7 @@ export default function BrandDetailModal({ brand, open, onOpenChange }: BrandDet
 
   const updateBrandMutation = useMutation({
     mutationFn: async (data: EditBrandForm) => {
-      const response = await apiRequest("PATCH", `/api/brands/${brand.id}`, data);
+      const response = await apiRequest("PATCH", `/api/brands?id=${brand.id}`, data);
       return response.json();
     },
     onSuccess: () => {
@@ -107,7 +107,7 @@ export default function BrandDetailModal({ brand, open, onOpenChange }: BrandDet
 
   const deleteBrandMutation = useMutation({
     mutationFn: async () => {
-      const response = await apiRequest("DELETE", `/api/brands/${brand.id}`);
+      const response = await apiRequest("DELETE", `/api/brands?id=${brand.id}`);
       if (response.status === 204) {
         return null; // 204 responses have no content
       }

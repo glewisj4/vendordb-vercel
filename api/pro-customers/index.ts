@@ -4,38 +4,76 @@ import { proCustomers, insertProCustomerSchema } from '../_lib/schema';
 import { eq, ilike, or, desc } from 'drizzle-orm';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  const { id, search } = req.query;
+
   try {
+    // Single customer operations
+    if (id && typeof id === 'string') {
+      if (req.method === 'GET') {
+        const [customer] = await db.select().from(proCustomers).where(eq(proCustomers.id, id));
+        if (!customer) {
+          return res.status(404).json({ error: 'Customer not found' });
+        }
+        return res.status(200).json(customer);
+      }
+
+      if (req.method === 'PATCH' || req.method === 'PUT') {
+        const [updated] = await db.update(proCustomers)
+          .set({ ...req.body, updatedAt: new Date() } as any)
+          .where(eq(proCustomers.id, id))
+          .returning();
+        if (!updated) {
+          return res.status(404).json({ error: 'Customer not found' });
+        }
+        return res.status(200).json(updated);
+      }
+
+      if (req.method === 'DELETE') {
+        const [deleted] = await db.delete(proCustomers)
+          .where(eq(proCustomers.id, id))
+          .returning();
+        if (!deleted) {
+          return res.status(404).json({ error: 'Customer not found' });
+        }
+        return res.status(200).json({ success: true });
+      }
+    }
+
+    // List operations
     if (req.method === 'GET') {
-      const { search } = req.query;
-      
       let result;
       if (search && typeof search === 'string') {
         result = await db.select().from(proCustomers)
           .where(or(
             ilike(proCustomers.businessName, `%${search}%`),
-            ilike(proCustomers.contactName, `%${search}%`)
+            ilike(proCustomers.primaryContactName, `%${search}%`)
           ))
           .orderBy(desc(proCustomers.createdAt));
       } else {
         result = await db.select().from(proCustomers).orderBy(desc(proCustomers.createdAt));
       }
-      
       return res.status(200).json(result);
     }
-    
+
     if (req.method === 'POST') {
       const parsed = insertProCustomerSchema.safeParse(req.body);
       if (!parsed.success) {
         return res.status(400).json({ error: parsed.error.message });
       }
-      
       const [newCustomer] = await db.insert(proCustomers)
-        .values(parsed.data)
+        .values(parsed.data as any)
         .returning();
-      
       return res.status(201).json(newCustomer);
     }
-    
+
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
     console.error('Pro Customers API error:', error);

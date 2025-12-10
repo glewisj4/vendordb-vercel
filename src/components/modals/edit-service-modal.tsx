@@ -56,7 +56,7 @@ export default function EditServiceModal({ service, isOpen, onClose }: EditServi
   const updateServiceMutation = useMutation({
     mutationFn: async (data: InsertService) => {
       if (!service) return;
-      const response = await apiRequest("PUT", `/api/services/${service.id}`, data);
+      const response = await apiRequest("PUT", `/api/services?id=${service.id}`, data);
       return response.json();
     },
     onSuccess: () => {

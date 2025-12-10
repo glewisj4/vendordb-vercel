@@ -25,7 +25,7 @@ export default function Services() {
 
   const deleteServiceMutation = useMutation({
     mutationFn: async (id: string) => {
-      await apiRequest("DELETE", `/api/services/${id}`);
+      await apiRequest("DELETE", `/api/services?id=${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/services"] });

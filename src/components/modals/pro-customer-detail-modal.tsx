@@ -232,7 +232,7 @@ Trade: ${customer?.primaryTrade || 'N/A'}
   const updateCustomerMutation = useMutation({
     mutationFn: async (data: InsertProCustomer) => {
       if (!customer) return;
-      const response = await apiRequest("PUT", `/api/pro-customers/${customer.id}`, data);
+      const response = await apiRequest("PUT", `/api/pro-customers?id=${customer.id}`, data);
       return response.json();
     },
     onSuccess: () => {
